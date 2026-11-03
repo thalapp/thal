@@ -36,3 +36,6 @@ co-authors
 
 # DB dumps
 devops/db-dumps
+
+# myco worktree mount point (created by `myco init`)
+project/
