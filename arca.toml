@@ -1,19 +1,34 @@
-# arca — secrets broker config for thal-env.
-# Secret values live in the `local` age vault; this file only declares refs.
-# Materialize: `arca run --env <dev|preview|prod> -- <cmd>`.
+# arca — secrets broker config for thal.
+# Secret values live in the personal CF vault (arca.luisfuturist.com);
+# this file only declares refs. Materialize:
+#   arca run --env <dev|preview|prod> -- <cmd>
 
 [envs]
-preview = { vault = "local" }
-prod    = { vault = "local" }
+dev     = { vault = "personal" }
+preview = { vault = "personal" }
+prod    = { vault = "personal" }
+
+[vaults.personal]
+kind = "cf"
+url = "https://arca.luisfuturist.com"
+token_env = "ARCA_CF_TOKEN"
+cache = ["dev", "preview"] # prod reads live — no stale-prod footgun
+
+# Scoped token refs live in the local vault — the ref path is the
+# token_id the worker's ARCA_VAULT_TOKENS map keys on.
+[vaults.personal.tokens]
+dev     = "arca://ops/cf-token"
+preview = "arca://ops/cf-token"
+prod    = "arca://ops/cf-token"
 
 [secrets]
 # Per-env secrets — the ref resolves against the active env context.
-GCP_GEMINI_API_KEY       = "arca://thal-env/gcp-gemini-api-key"
-GCP_CLOUD_TTS_API_KEY    = "arca://thal-env/gcp-cloud-tts-api-key"
-GCP_GOOGLE_CLIENT_SECRET = "arca://thal-env/gcp-google-client-secret"
-STRIPE_SECRET_KEY        = "arca://thal-env/stripe-secret-key"
-STRIPE_ENDPOINT_SECRET   = "arca://thal-env/stripe-endpoint-secret"
+GCP_GEMINI_API_KEY       = "arca://thal/gcp-gemini-api-key"
+GCP_CLOUD_TTS_API_KEY    = "arca://thal/gcp-cloud-tts-api-key"
+GCP_GOOGLE_CLIENT_SECRET = "arca://thal/gcp-google-client-secret"
+STRIPE_SECRET_KEY        = "arca://thal/stripe-secret-key"
+STRIPE_ENDPOINT_SECRET   = "arca://thal/stripe-endpoint-secret"
 
 # Dev-only secrets — pinned to the dev env (absent from .env.preview/.env.prod).
-TARSI_GEMINI_API_KEY = "arca://dev/thal-env/tarsi-gemini-api-key"
-DELPHIS_PASSWORD     = "arca://dev/thal-env/delphis-password"
+TARSI_GEMINI_API_KEY = "arca://dev/thal/tarsi-gemini-api-key"
+DELPHIS_PASSWORD     = "arca://dev/thal/delphis-password"

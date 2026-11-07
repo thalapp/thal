@@ -42,10 +42,10 @@ Non-secret values are read from the env files as before; secrets arrive via
 Values never go on the command line — `arca put` reads stdin:
 
 ```bash
-printf '%s' "$NEW_VALUE" | arca put arca://thal-env/<name> --env <env>
+printf '%s' "$NEW_VALUE" | arca put arca://thal/<name> --env <env>
 
 # e.g. rotate the dev stripe webhook secret after `stripe listen`:
-printf '%s' "$whsec" | arca put arca://thal-env/stripe-endpoint-secret --env dev
+printf '%s' "$whsec" | arca put arca://thal/stripe-endpoint-secret --env dev
 ```
 
 ## Notes
@@ -54,7 +54,7 @@ printf '%s' "$whsec" | arca put arca://thal-env/stripe-endpoint-secret --env dev
   `arca://dev/…` refs so they always resolve to the dev value.
 - `APICLIENT_SESSION_COOKIE` is empty post-sign-in session state and is
   intentionally not vaulted. Set it locally, or
-  `arca put arca://dev/thal-env/apiclient-session-cookie` and add it to
+  `arca put arca://dev/thal/apiclient-session-cookie` and add it to
   `[secrets]` in `arca.toml`.
 - `GCP_GOOGLE_CLIENT_ID`, `GEMINI_MODEL`, `RUNTIME_ENV`, `LAUNCH_EDITOR`,
   `DELPHIS_USER` are non-secret config — they stay literal in the env files.
