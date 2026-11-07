@@ -17,9 +17,10 @@ cache = ["dev", "preview"] # prod reads live — no stale-prod footgun
 # Scoped token refs live in the local vault — the ref path is the
 # token_id the worker's ARCA_VAULT_TOKENS map keys on.
 [vaults.personal.tokens]
-dev     = "arca://ops/cf-token"
-preview = "arca://ops/cf-token"
-prod    = "arca://ops/cf-token"
+dev     = "arca://ops/cf-token-dev"
+staging = "arca://ops/cf-token-staging"
+preview = "arca://ops/cf-token-preview"
+prod    = "arca://ops/cf-token-prod"
 
 [secrets]
 # Per-env secrets — the ref resolves against the active env context.
