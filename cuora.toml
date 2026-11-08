@@ -1,0 +1,35 @@
+# cuora — secrets broker config for thal.
+# Secret values live in the personal CF vault (cuora.luisfuturist.com);
+# this file only declares refs. Materialize:
+#   cuora run --env <dev|preview|prod> -- <cmd>
+
+[envs]
+dev     = { vault = "personal" }
+preview = { vault = "personal" }
+prod    = { vault = "personal" }
+
+[vaults.personal]
+kind = "cf"
+url = "https://cuora.luisfuturist.com"
+token_env = "CUORA_CF_TOKEN"
+cache = ["dev", "preview"] # prod reads live — no stale-prod footgun
+
+# Scoped token refs live in the local vault — the ref path is the
+# token_id the worker's CUORA_VAULT_TOKENS map keys on.
+[vaults.personal.tokens]
+dev     = "cuora://ops/cf-token-dev"
+staging = "cuora://ops/cf-token-staging"
+preview = "cuora://ops/cf-token-preview"
+prod    = "cuora://ops/cf-token-prod"
+
+[secrets]
+# Per-env secrets — the ref resolves against the active env context.
+GCP_GEMINI_API_KEY       = "cuora://thal/gcp-gemini-api-key"
+GCP_CLOUD_TTS_API_KEY    = "cuora://thal/gcp-cloud-tts-api-key"
+GCP_GOOGLE_CLIENT_SECRET = "cuora://thal/gcp-google-client-secret"
+STRIPE_SECRET_KEY        = "cuora://thal/stripe-secret-key"
+STRIPE_ENDPOINT_SECRET   = "cuora://thal/stripe-endpoint-secret"
+
+# Dev-only secrets — pinned to the dev env (absent from .env.preview/.env.prod).
+TARSI_GEMINI_API_KEY = "cuora://dev/thal/tarsi-gemini-api-key"
+DELPHIS_PASSWORD     = "cuora://dev/thal/delphis-password"
